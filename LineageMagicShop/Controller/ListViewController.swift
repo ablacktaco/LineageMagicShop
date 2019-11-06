@@ -10,14 +10,18 @@ import UIKit
 
 class ListViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    let userdata = UserData.shared
+    let userData = UserData.shared
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return userdata.magicData.count
+        return userData.magicData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return userdata.magicData[section].count
+        return userData.magicData[section].count
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -38,7 +42,7 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         let cellIdentifier = "magicIconCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! ListCollectionViewCell
 
-        let data = userdata.magicData[indexPath.section][indexPath.row]
+        let data = userData.magicData[indexPath.section][indexPath.row]
         
         cell.listMagicIcon.image = UIImage(named: data.magicName)
         cell.showPurchasedStateView.isHidden = data.purchaseState
@@ -46,10 +50,4 @@ class ListViewController: UIViewController, UICollectionViewDataSource, UICollec
         return cell
     }
     
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
-
 }

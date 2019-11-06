@@ -8,42 +8,47 @@
 
 import UIKit
 
-class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ShopViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    let userdata = UserData.shared
+    let userData = UserData.shared
     
-    @IBOutlet var userMoney: UILabel!
     @IBOutlet var mainView: UIView!
-    @IBOutlet var alertView: UIView!
+    @IBOutlet var userMoney: UILabel!
     @IBOutlet var displayOfTable: UITableView!
     @IBOutlet var displayOfCollection: UICollectionView!
+    
+    @IBOutlet var alertView: UIView!
     @IBOutlet var purchaseView: UIView!
     @IBOutlet var moneyNotEnoughView: UIView!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userdata.magicData[userdata.levelTag].count
+        return userData.magicData[userData.levelTag].count
+    }
+    
+    fileprivate func judgePurchaseState(_ data: MagicData, _ cell: ShopTableViewCell) {
+        if data.purchaseState {
+            cell.soldOutView.isHidden = false
+        } else {
+            cell.soldOutView.isHidden = true
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellIdentifier = "magicDataCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ShopTableViewCell
         
-        let data = userdata.magicData[userdata.levelTag][indexPath.row]
+        let data = userData.magicData[userData.levelTag][indexPath.row]
         
         cell.magicIcon?.image = UIImage(named: data.magicName)
         cell.magicName.text = data.magicName
         cell.magicPrice.text = "$ \(data.magicPrice)"
-        if data.purchaseState {
-            cell.soldOutView.isHidden = false
-        } else {
-            cell.soldOutView.isHidden = true
-        }
+        judgePurchaseState(data, cell)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return userdata.magicData[userdata.levelTag].count
+        return userData.magicData[userData.levelTag].count
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -54,7 +59,7 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
         let cellIdentifier = "magicDataCell"
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! ShopCollectionViewCell
         
-        let data = userdata.magicData[userdata.levelTag][indexPath.row]
+        let data = userData.magicData[userData.levelTag][indexPath.row]
         
         cell.magicIcon?.image = UIImage(named: data.magicName)
         if data.purchaseState {
@@ -67,7 +72,7 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if userdata.magicData[userdata.levelTag][indexPath.row].purchaseState {
+        if userData.magicData[userData.levelTag][indexPath.row].purchaseState {
             return nil
         }
         return indexPath
@@ -78,8 +83,8 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     @IBOutlet var magicPrice: UILabel!
     @IBOutlet var purchaseMagicButton: UIButton!
     @IBAction func toPurchaseMagic(_ sender: UIButton) {
-        userdata.userMoney -= userdata.magicData[userdata.levelTag][index].magicPrice
-        userdata.magicData[userdata.levelTag][index].purchaseState.toggle()
+        userData.userMoney -= userData.magicData[userData.levelTag][index].magicPrice
+        userData.magicData[userData.levelTag][index].purchaseState.toggle()
         alertView.isHidden = true
         mainView.isUserInteractionEnabled = true
         viewWillAppear(false)
@@ -97,10 +102,10 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     }
     
     fileprivate func showPurchaseView(_ indexPath: IndexPath) {
-        let data = userdata.magicData[userdata.levelTag][indexPath.row]
+        let data = userData.magicData[userData.levelTag][indexPath.row]
         mainView.isUserInteractionEnabled = false
         alertView.isHidden = false
-        if userdata.userMoney >= data.magicPrice {
+        if userData.userMoney >= data.magicPrice {
             purchaseView.isHidden = false
             moneyNotEnoughView.isHidden = true
             magicIcon.image = UIImage(named: data.magicName)
@@ -134,7 +139,7 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userdata.levelTag = 0
+        userData.levelTag = 0
         levelOneButton.backgroundColor = UIColor(red: 33.0/255.0, green: 33.0/255.0, blue: 33.0/255.0, alpha: 1.0)
         switchTableViewButton.backgroundColor = UIColor(red: 33.0/255.0, green: 33.0/255.0, blue: 33.0/255.0, alpha: 1.0)
         
@@ -148,7 +153,7 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        userMoney.text = "$ \(userdata.userMoney)"
+        userMoney.text = "$ \(userData.userMoney)"
     }
     
     fileprivate func reloadTableOrCollection() {
@@ -168,19 +173,19 @@ class ShopViewController: UIViewController,UITableViewDataSource,UITableViewDele
     
     @IBOutlet var levelOneButton: UIButton!
     @IBAction func ShowLevelOneMagic(_ sender: UIButton) {
-        userdata.levelTag = 0
+        userData.levelTag = 0
         resetLevelButtonColor(sender)
         reloadTableOrCollection()
     }
     @IBOutlet var levelTwoButton: UIButton!
     @IBAction func ShowLevelTwoMagic(_ sender: UIButton) {
-        userdata.levelTag = 1
+        userData.levelTag = 1
         resetLevelButtonColor(sender)
         reloadTableOrCollection()
     }
     @IBOutlet var levelThreeButton: UIButton!
     @IBAction func ShowLevelThreeMagic(_ sender: UIButton) {
-        userdata.levelTag = 2
+        userData.levelTag = 2
         resetLevelButtonColor(sender)
         reloadTableOrCollection()
     }

@@ -11,7 +11,8 @@ import Foundation
 class UserData {
     
     static let shared = UserData()
-        
+
+    var levelTag = 0
     static let defaultMagicData: [[MagicData]] = [
         
         [MagicData(magicName: "保護罩", magicPrice: 100, purchaseState: false),
@@ -42,8 +43,6 @@ class UserData {
         
     ]
     
-    var levelTag = 0
-    
     var magicData: [[MagicData]] {
         didSet {
             if let data = try? PropertyListEncoder().encode(self.magicData) {
@@ -51,7 +50,6 @@ class UserData {
             }
         }
     }
-    
     private static func getMagicData() -> [[MagicData]] {
         if let magicData = UserDefaults.standard.object(forKey: "magicData") as? Data {
             if let data = try? PropertyListDecoder().decode([[MagicData]].self, from: magicData) {
@@ -66,7 +64,6 @@ class UserData {
             UserDefaults.standard.set(self.userMoney, forKey: "userMoney")
         }
     }
-    
     private static func getUserMoney() -> Int {
         if let data = UserDefaults.standard.value(forKey: "userMoney") as? Int {
             return data

@@ -67,11 +67,7 @@ class ShopViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.magicIcon?.image = UIImage(named: data.magicName)
         cell.magicName.text = data.magicName
         cell.magicPrice.text = "$ \(data.magicPrice)"
-        if data.purchaseState {
-            cell.soldOutView.isHidden = false
-        } else {
-            cell.soldOutView.isHidden = true
-        }
+        cell.soldOutView.isHidden = data.purchaseState ? false : true
         
         return cell
     }
@@ -103,11 +99,7 @@ class ShopViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let data = userData.magicData[userData.levelTag][indexPath.row]
         
         cell.magicIcon?.image = UIImage(named: data.magicName)
-        if data.purchaseState {
-            cell.soldOutView.isHidden = false
-        } else {
-            cell.soldOutView.isHidden = true
-        }
+        cell.soldOutView.isHidden = data.purchaseState ? false : true
         
         return cell
     }

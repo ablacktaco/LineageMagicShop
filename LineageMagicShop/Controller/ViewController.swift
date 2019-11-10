@@ -29,10 +29,10 @@ class ViewController: UIViewController {
         } else {
             answerList.remove(at: 0)
             answerList.append(false)
-        }
-        if answerList == correctList {
-            userData.userMoney += 100
-            viewWillAppear(false)
+            if answerList == correctList {
+                userData.userMoney += 100
+                viewWillAppear(false)
+            }
         }
     }
     @IBOutlet var userMoney: UILabel!

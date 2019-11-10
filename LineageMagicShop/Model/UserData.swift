@@ -13,7 +13,7 @@ class UserData {
     static let shared = UserData()
 
     var levelTag = 0
-    static let defaultMagicData: [[MagicData]] = [
+    private static let defaultMagicData: [[MagicData]] = [
         
         [MagicData(magicName: "保護罩", magicPrice: 100, purchaseState: false),
          MagicData(magicName: "光箭", magicPrice: 100, purchaseState: false),
@@ -43,7 +43,7 @@ class UserData {
         
     ]
     
-    var magicData: [[MagicData]] {
+    var magicData: [[MagicData]] = UserData.getMagicData() {
         didSet {
             if let data = try? PropertyListEncoder().encode(self.magicData) {
                 UserDefaults.standard.set(data, forKey: "magicData")
@@ -59,7 +59,8 @@ class UserData {
         return defaultMagicData
     }
     
-    var userMoney: Int {
+    var userMoney: Int = UserData.getUserMoney() {
+        
         didSet {
             UserDefaults.standard.set(self.userMoney, forKey: "userMoney")
         }
@@ -72,8 +73,8 @@ class UserData {
     }
     
     private init() {
-        userMoney = UserData.getUserMoney()
-        magicData = UserData.getMagicData()
+//        userMoney = UserData.getUserMoney()
+//        magicData = UserData.getMagicData()
     }
     
 }
